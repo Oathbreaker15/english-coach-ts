@@ -1,5 +1,5 @@
-import { Tenses, Signs, Pronouns } from "../Task";
-import type { Task, Verbs } from "../Task";
+import { Tenses, Signs, Pronouns, Verbs } from "../Task";
+import type { ITask } from "../interfaces/interfaces";
 import { capitalize } from "../utils/capitalize";
 import { IGetSolution, IIrregularVerb } from "../interfaces/interfaces";
 
@@ -8,7 +8,7 @@ const irregularVerbs: IIrregularVerb = {
 }
 
 export class English implements IGetSolution {
-    getSolution(task: Task): string {
+    getSolution(task: ITask): string {
         const tensesMap = {
             [Tenses.presentSimple]: this.getPresentSimpleSolution.bind(this),
             [Tenses.presetContinuous]: this.getPresentContinuousSolution.bind(this),
@@ -20,7 +20,7 @@ export class English implements IGetSolution {
         return capitalize(this.minimize(result))
     }
 
-    protected getPresentSimpleSolution(task: Task): string {
+    protected getPresentSimpleSolution(task: ITask): string {
         const result = []
         if (task.sign === Signs.positive) {
             result.push(task.pronoun)
@@ -49,7 +49,7 @@ export class English implements IGetSolution {
         return result.join(' ')
     }
 
-    protected getPresentContinuousSolution(task: Task): string {
+    protected getPresentContinuousSolution(task: ITask): string {
         const result = []
         let aux = 'am'
         if ([Pronouns.you, Pronouns.we, Pronouns.they].includes(task.pronoun)) {
@@ -70,7 +70,7 @@ export class English implements IGetSolution {
         return result.join(' ')
     }
 
-    protected getFutureSimpleSolution(task: Task): string {
+    protected getFutureSimpleSolution(task: ITask): string {
         const result = []
         if (task.sign === Signs.question) {
             result.push('will', task.pronoun, `${task.verb}?`)
@@ -84,7 +84,7 @@ export class English implements IGetSolution {
         return result.join(' ')
     }
 
-    protected getPastSimpleSolution(task: Task): string {
+    protected getPastSimpleSolution(task: ITask): string {
         const result = []
         if (task.sign === Signs.positive) {
             result.push(task.pronoun, this.get2VerbForm(task.verb))
@@ -112,7 +112,7 @@ export class English implements IGetSolution {
         return `${verb}ing`
     }
 
-    protected get2VerbForm(verb: string): string {
+    protected get2VerbForm(verb: Verbs): string {
         const irregularVerb = irregularVerbs[verb]
         if (irregularVerb) {
             return irregularVerb[1]

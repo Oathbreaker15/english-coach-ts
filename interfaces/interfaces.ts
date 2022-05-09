@@ -1,6 +1,11 @@
-import type { Task } from "../Task";
+import { Tenses, Pronouns, Signs, Verbs } from "../Task";
 
 export interface ITask {
+    tense: Tenses;
+    pronoun: Pronouns;
+    sign: Signs;
+    verb: Verbs;
+
     toString():string;
 }
 
@@ -10,56 +15,22 @@ export interface IView {
 }
 
 export interface ITaskBuilder {
-    createRandomTask(): Task;
+    createRandomTask(): ITask;
 }
 
-export interface IGame {
-    start(): void;
-    nextStep(): void;
-    suggestTask(): void;
-    suggestSolution(): void;
-}
-
-export interface IIrregularVerb {
-    [index: string]: string[];
+export type IIrregularVerb = {
+    [verb in Verbs]?: [string, string, string];
 }
 
 export interface IGetSolution {
-    getSolution(task: Task): string;
+    getSolution(task: ITask | undefined): string;
 }
 
-export interface IVerbsMap {
-    work: {
-        present: {
-            [index: string]: string
-        },
-        past: {
-            [index: string]: string
-        },
-        future: {
-            [index: string]: string
-        }
-    },
-    study: {
-        present: {
-            [index: string]: string
-        },
-        past: {
-            [index: string]: string
-        },
-        future: {
-            [index: string]: string
-        }
-    },
-    go: {
-        present: {
-            [index: string]: string
-        },
-        past: {
-            [index: string]: string
-        },
-        future: {
-            [index: string]: string
-        }
-    }
+type PronounsMap = Record<Pronouns, string>;
+export type IVerbsMap = {
+    [verb in Verbs]: {
+        present: PronounsMap,
+        past: PronounsMap,
+        future: PronounsMap,
+    } 
 }

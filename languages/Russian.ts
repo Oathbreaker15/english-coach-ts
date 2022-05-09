@@ -1,5 +1,4 @@
-import { IGetSolution, IVerbsMap } from "../interfaces/interfaces";
-import type { Task } from "../Task";
+import { ITask, IGetSolution, IVerbsMap } from "../interfaces/interfaces";
 import { Tenses, Signs, Pronouns } from "../Task";
 import { capitalize } from "../utils/capitalize";
 
@@ -13,8 +12,6 @@ enum PronounsMap {
     it = 'это',
 }
 
-// здесь я ХУЙ ЗНАЕТ что вообще с этим было делать. интерфейс тип [index: string]: string для каждого времени?
-// енамы я зассал делать, потому что 
 const verbsMap: IVerbsMap = {
     work: {
         present: {
@@ -106,7 +103,7 @@ const verbsMap: IVerbsMap = {
 }
 
 export class Russian implements IGetSolution {
-    getSolution(task: Task): string {
+    getSolution(task: ITask): string {
         const tensesMap = {
             [Tenses.presentSimple]: this.getPresentSimpleSolution.bind(this),
             [Tenses.presetContinuous]: this.getPresentContinuousSolution.bind(this),
@@ -117,7 +114,7 @@ export class Russian implements IGetSolution {
         return capitalize(result)
     }
 
-    protected getPresentSimpleSolution(task: Task, now: boolean = false) {
+    protected getPresentSimpleSolution(task: ITask, now: boolean = false) {
         const acc: string[] = [PronounsMap[task.pronoun]]
         if (now) {
             acc.push('сейчас')
@@ -130,11 +127,11 @@ export class Russian implements IGetSolution {
         return (task.sign === Signs.question) ? `${result}?` : result
     }
 
-    protected getPresentContinuousSolution(task: Task) {
+    protected getPresentContinuousSolution(task: ITask) {
         return this.getPresentSimpleSolution(task, true)
     }
 
-    protected getFutureSimpleSolution(task: Task) {
+    protected getFutureSimpleSolution(task: ITask) {
         const acc: string[] = [PronounsMap[task.pronoun]]
         if (task.sign === Signs.negative) {
             acc.push('не')
@@ -144,7 +141,7 @@ export class Russian implements IGetSolution {
         return (task.sign === Signs.question) ? `${result}?` : result
     }
 
-    protected getPastSimpleSolution(task: Task) {
+    protected getPastSimpleSolution(task: ITask) {
         const acc: string[] = [PronounsMap[task.pronoun]]
         if (task.sign === Signs.negative) {
             acc.push('не')
